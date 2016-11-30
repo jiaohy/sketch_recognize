@@ -3,6 +3,9 @@
 	</head>
 <script src="require.js"></script>
 <script src="srlib.js"></script>
+<script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script> 
+<script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
+<script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script> 
 <script type="text/javascript">
     var canvas, ctx, flag = false,
         prevX = 0,
@@ -50,6 +53,7 @@
     
     function erase() {
         ctx.clearRect(0, 0, w, h);
+		pointscloud = [];
     }
 	function colorized(){
 		ctx.font = "30px Arial";
@@ -67,14 +71,13 @@
 	function beautify(){
 		ctx.font = "30px Arial";
 		ctx.fillText("beautify",10,50);
-		justify("1", 1, 1, 1);
+		var tempcenter= new srlib.core.data.container.Point(50, 50);
+		justify("1", 1, 2, tempcenter);
 	}
 	
-	function justify(name, topleft, downright, center){
-		window.onload = function(){
-	  	  	canvg('canvas', 'https://upload.wikimedia.org/wikipedia/commons/d/d2/Svg_example_square.svg');
-		}
-  	  	
+	function justify(name, scalewidth, scaleheight, center){
+	  		canvg('myCanvas','https://upload.wikimedia.org/wikipedia/commons/d/d2/Svg_example_square.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true});
+		
 	}
     
     function findxy(res, e) {
