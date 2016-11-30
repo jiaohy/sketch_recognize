@@ -115,10 +115,15 @@ function PDollarRecognizer() // constructor
 		new Point(644,393,4),new Point(644,423,4)
 	));
 	this.PointClouds[3] = new PointCloud("inductor", new Array(
-		new Point(566,393,1),new Point(644,393,1),
-		new Point(566,393,2),new Point(566,423,2),
-		new Point(566,423,3),new Point(644,423,3),
-		new Point(644,393,4),new Point(644,423,4)
+		new Point(284,403,1),new Point(286,386,1),new Point(290,375,1),new Point(298,362,1),new Point(304,355,1),new Point(311,350,1),
+		new Point(319,347,1),new Point(328,344,1),new Point(336,343,1),new Point(343,343,1),new Point(351,344,1),new Point(362,348,1),
+		new Point(370,352,1),new Point(379,361,1),new Point(386,371,1),new Point(391,380,1),new Point(394,395,1),new Point(394,403,1),
+		new Point(398,379,1),new Point(403,370,1),new Point(408,362,1),new Point(415,354,1),new Point(424,349,1),new Point(433,345,1),
+		new Point(442,343,1),new Point(448,343,1),new Point(465,345,1),new Point(476,349,1),new Point(495,367,1),new Point(500,377,1),
+		new Point(504,392,1),new Point(504,403,1),
+		new Point(507,383,1),new Point(514,369,1),new Point(521,360,1),new Point(533,350,1),new Point(545,344,1),new Point(556,342,1),
+		new Point(567,343,1),new Point(583,348,1),new Point(594,354,1),new Point(604,367,1),new Point(608,374,1),new Point(611,384,1),
+		new Point(615,393,1),new Point(616,400,1)
 	));
 	this.PointClouds[4] = new PointCloud("switch", new Array(
 		new Point(356,469,1),new Point(358,449,1),new Point(361,434,1),new Point(368,413,1),new Point(377,400,1),new Point(389,385,1),
