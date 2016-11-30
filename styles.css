@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* CSS Document */
+
+.subhead {
+	font-size: large;
+	font-weight: bolder;
+}
+#heading {
+	font-size:36px;
+	font-weight:bolder;
+}
+body {
+	width:800px;
+	margin:auto;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+}
