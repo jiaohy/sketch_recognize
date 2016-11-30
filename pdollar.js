@@ -143,8 +143,8 @@ function PDollarRecognizer() // constructor
 		new Point(509,543,1),new Point(497,550,1),new Point(478,556,1),new Point(457,558,1),new Point(435,556,1),new Point(419,551,1),
 		new Point(403,542,1),new Point(392,534,1),new Point(382,524,1),new Point(372,510,1),new Point(363,495,1),new Point(359,479,1),
 		new Point(358,470,1),
-		new Point(415,412,2),new Point(497,513,2),
-		new Point(415,513,3),new Point(497,410,3)
+		new Point(360,412,2),new Point(497,547,2),
+		new Point(360,490,3),new Point(497,360,3)
 	));
 	this.PointClouds[6] = new PointCloud("AC", new Array(
 		new Point(356,469,1),new Point(358,449,1),new Point(361,434,1),new Point(368,413,1),new Point(377,400,1),new Point(389,385,1),
