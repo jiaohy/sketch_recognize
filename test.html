@@ -5,7 +5,9 @@
 <script src="srlib.js"></script>
 <script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script> 
 <script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
-<script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script> 
+<script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
+<script type="text/javascript" src="pdollar.js"></script>
+ 
 <script type="text/javascript">
     var canvas, ctx, flag = false,
         prevX = 0,
@@ -13,8 +15,8 @@
         prevY = 0,
         currY = 0,
         dot_flag = false,
-		stroke_id = 0;
-
+		strokeID = 0;
+		_Recog = new PDollarRecognizer();
     var x = "black",
         y = 2;
 	var pointscloud = [];
@@ -47,7 +49,7 @@
         ctx.lineWidth = y;
         ctx.stroke();
         ctx.closePath();
-		newpoints= new srlib.core.data.container.Point(currX, currY);
+		newpoints = new Point(currX, currY, strokeID);
 		pointscloud.push(newpoints);
 		
     }
@@ -65,8 +67,9 @@
 		ctx.font = "30px Arial";
 		var height = 0;
 		for(var key in pointscloud){
-			ctx.fillText(pointscloud[key].getX(),10,height);
-			ctx.fillText(pointscloud[key].getY(),100,height);
+			ctx.fillText(pointscloud[key].X,10,height);
+			ctx.fillText(pointscloud[key].Y,100,height);
+			ctx.fillText(pointscloud[key].ID,200,height);	
 			height +=20;
 		}
 	}
@@ -113,7 +116,7 @@
             prevY = currY;
             currX = e.clientX - canvas.offsetLeft;
             currY = e.clientY - canvas.offsetTop;
-    		//++strokeID;
+    		++strokeID;
             flag = true;
             dot_flag = true;
             if (dot_flag) {
@@ -126,12 +129,17 @@
         }
         if (res == 'up' || res == "out") {
             flag = false;
-			result = "for test";
-			/*if(result != "no match"){// got recognized, flush old pointcloud
+			var result = _Recog.Recognize(pointscloud);
+			var result2 = "clear!";
+			if (strokeID < 5){
+				showResult(result.Name);
+			}
+			else{
 				pointscloud = [];
 				strokeID = 0;
-				showResult(result);
-			}*/
+				showResult(result2);
+			}
+
         }
         if (res == 'move') {
             if (flag) {
