@@ -19,8 +19,10 @@
 		_Recog = new PDollarRecognizer();
     var x = "black",
         y = 2;
-	var pointscloud = [];
-	var newpoints;
+	var pointscloud = [];// 點群
+	var newpoints;//點
+	
+	// -- 以下是畫布設定，沒事不要亂動
     function init() {
         canvas = document.getElementById('myCanvas');
         ctx = canvas.getContext("2d");
@@ -59,10 +61,15 @@
 		pointscloud = [];
 		strokeID = 0;
     }
+	// -- 以上是畫布部分，沒事不要動
+	
+	// 上色，把各不同ＵＮＩＴ上色
 	function colorized(){
 		ctx.font = "30px Arial";
 		ctx.fillText("colored",10,50);
 	}
+	
+	// 編號，把個ＵＮＩＴ上編號
 	function number(){
 		ctx.font = "30px Arial";
 		var height = 0;
@@ -73,43 +80,48 @@
 			height +=20;
 		}
 	}
+	
+	//美化，把線拉直和把ＳＶＧ依比例放在原草圖上
 	function beautify(){
 		ctx.font = "30px Arial";
 		ctx.fillText("beautify",10,50);
-		var tempcenter= new srlib.core.data.container.Point(50, 50);
-		justify('AC_voltage_source.svg', 20, 20, tempcenter);
+		
+		
+		//這行叫出放在ＧＩＴＨＵＢ裡的ＳＶＧ檔，（檔名，拉寬比，拉高比，中心點）
+		justify('AC_voltage_source.svg', 20, 20, 50, 50);
 	}
 	
-	function justify(name, scalewidth, scaleheight, center){
+	function justify(name, scalewidth, scaleheight, centerX, centerY){
 		switch(name){
 				case 'AC_voltage_source.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/AC_voltage_source.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/AC_voltage_source.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 						break;
 				case 'Earth_Ground.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Earth_Ground.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Earth_Ground.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 						break;
 				case 'Inductor.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Inductor.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Inductor.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 						break;
 				case 'Resistor.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Resistor.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Resistor.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 						break;
 				case 'Voltage_Source_vertical.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Voltage_Source_vertical.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Voltage_Source_vertical.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 						break;
 				case 'capacitor.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/capacitor.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/capacitor.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 						break;
 				case 'lamp.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/lamp.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/lamp.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 						break;
 				case 'switch.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/switch.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/switch.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 		
 		} 		   
 		
 	}
     
+//--以下也是畫布相關沒事不要動	
     function findxy(res, e) {
         if (res == 'down') {
             prevX = currX;
@@ -158,6 +170,7 @@
 		ctx.fillStyle = "rgb(0,0,255)";
 		ctx.fillText(str, 1, 14);
 	}
+// -- 以上畫布相關沒事不要動
     </script>
 			<body onload="init()">
 			        <canvas id="myCanvas" width="1000" height="600" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
