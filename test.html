@@ -12,7 +12,8 @@
         currX = 0,
         prevY = 0,
         currY = 0,
-        dot_flag = false;
+        dot_flag = false,
+		stroke_id = 0;
 
     var x = "black",
         y = 2;
@@ -54,6 +55,7 @@
     function erase() {
         ctx.clearRect(0, 0, w, h);
 		pointscloud = [];
+		strokeID = 0;
     }
 	function colorized(){
 		ctx.font = "30px Arial";
@@ -72,11 +74,36 @@
 		ctx.font = "30px Arial";
 		ctx.fillText("beautify",10,50);
 		var tempcenter= new srlib.core.data.container.Point(50, 50);
-		justify("1", 1, 2, tempcenter);
+		justify('AC_voltage_source.svg', 20, 20, tempcenter);
 	}
 	
 	function justify(name, scalewidth, scaleheight, center){
-	  		canvg('myCanvas','https://upload.wikimedia.org/wikipedia/commons/d/d2/Svg_example_square.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true});
+		switch(name){
+				case 'AC_voltage_source.svg':
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/AC_voltage_source.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						break;
+				case 'Earth_Ground.svg':
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Earth_Ground.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						break;
+				case 'Inductor.svg':
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Inductor.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						break;
+				case 'Resistor.svg':
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Resistor.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						break;
+				case 'Voltage_Source_vertical.svg':
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/Voltage_Source_vertical.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						break;
+				case 'capacitor.svg':
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/capacitor.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						break;
+				case 'lamp.svg':
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/lamp.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						break;
+				case 'switch.svg':
+						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/switch.svg', {offsetX:center.getX(), offsetY:center.getY(), scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+		
+		} 		   
 		
 	}
     
@@ -86,7 +113,7 @@
             prevY = currY;
             currX = e.clientX - canvas.offsetLeft;
             currY = e.clientY - canvas.offsetTop;
-    
+    		//++strokeID;
             flag = true;
             dot_flag = true;
             if (dot_flag) {
@@ -99,6 +126,12 @@
         }
         if (res == 'up' || res == "out") {
             flag = false;
+			result = "for test";
+			/*if(result != "no match"){// got recognized, flush old pointcloud
+				pointscloud = [];
+				strokeID = 0;
+				showResult(result);
+			}*/
         }
         if (res == 'move') {
             if (flag) {
@@ -110,6 +143,13 @@
             }
         }
     }
+	
+	function showResult(str){
+		ctx.fillStyle = "rgb(255,255,136)";
+		ctx.fillRect(0, 0, w, 20);
+		ctx.fillStyle = "rgb(0,0,255)";
+		ctx.fillText(str, 1, 14);
+	}
     </script>
 			<body onload="init()">
 			        <canvas id="myCanvas" width="1000" height="600" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
