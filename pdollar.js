@@ -87,7 +87,7 @@ function Result(name, score) // constructor
 //
 // PDollarRecognizer class constants
 //
-var NumPointClouds = 7;
+var NumPointClouds = 12;
 var NumPoints = 32;
 var Origin = new Point(0,0,0);
 //
@@ -159,7 +159,17 @@ function PDollarRecognizer() // constructor
 		new Point(464,443,2),new Point(470,434,2),new Point(475,427,2),new Point(482,422,2),new Point(490,417,2),new Point(501,416,2),
 		new Point(517,421,2),new Point(529,433,2),new Point(536,441,2),new Point(542,455,2)
 	));
-
+	for (var i = 7; i < NumPointClouds; i++) {
+		tmpPoints = this.PointClouds[i - 7].Points;
+		var pointsArray = [];
+		for (var j = 0; j < tmpPoints.length; j++) {
+			var x = tmpPoints[j].Y;
+			var y = tmpPoints[j].X;
+			var id = tmpPoints[j].ID;
+			pointsArray.splice(pointsArray.length, 0, new Point(x, y, id));
+		};
+		this.PointClouds[i] = new PointCloud(this.PointClouds[i - 7].Name, pointsArray);
+	}
 	//
 	// The $P Point-Cloud Recognizer API begins here -- 3 methods: Recognize(), AddGesture(), DeleteUserGestures()
 	//
