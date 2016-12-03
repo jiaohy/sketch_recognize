@@ -190,8 +190,8 @@
         if (res == 'down') {
             prevX = currX;
             prevY = currY;
-            currX = e.clientX;
-            currY = e.clientY;
+            currX = e.clientX - canvas.offsetLeft;
+            currY = e.clientY - canvas.offsetTop;
     		++strokeID;
             flag = true;
             dot_flag = true;
