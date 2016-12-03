@@ -88,7 +88,34 @@
 		
 		
 		//這行叫出放在ＧＩＴＨＵＢ裡的ＳＶＧ檔，（檔名，拉寬比，拉高比，中心點）
-		justify('switch.svg', 10, 10, 50, 50);
+		//Based on the recognized component
+		var result = _Recog.Recognize(pointscloud).Name;
+		//console.log(result)
+		switch(result)
+		{
+			case "switch":
+				justify('switch.svg', 10, 10, 50, 50);
+				break;
+			case "lamp":
+				justify('lamp.svg', 50, 50, 100, 100);
+				break;
+			case "capacitor":
+				justify('capacitor.svg', 10, 10, 50, 50);
+				break;
+			case "earthground":
+				justify('Earth_Ground.svg', 50, 50, 100, 100);
+				break;
+			case "resistor":
+				justify('Resistor.svg', 50, 50, 100, 100);
+				break;
+			case "inductor":
+				justify('Inductor.svg', 50, 50, 100, 100);
+				break;
+			case "AC":
+				justify('AC_voltage_source.svg', 50, 50, 100, 100);
+
+		}
+		
 	}
 	
 	function justify(name, scalewidth, scaleheight, centerX, centerY){
