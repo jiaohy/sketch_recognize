@@ -21,6 +21,37 @@
         y = 2;
 	var pointscloud = [];// 點群
 	var newpoints;//點
+	var units = [];//ＵＮＩＴ群
+	
+	//一個UNIT元件的class
+	function unit_attribute(pointscloud, name){
+		this.pointscloud = pointscloud;
+		this.name = name;
+		var minX = +Infinity, maxX = -Infinity, minY = +Infinity, maxY = -Infinity;
+		for (var i = 0; i < pointscloud.length; i++) {
+			if(minX > pointscloud[i].X){
+				minX = pointscloud[i].X;
+			}
+			if(minY > pointscloud[i].Y){
+				minY = pointscloud[i].Y;
+			}
+			if(maxX < pointscloud[i].X){
+				maxX = pointscloud[i].X;
+			}
+			if(maxY < pointscloud[i].Y){
+				maxY = pointscloud[i].Y;
+			}
+		}	
+		this.minX = minX;
+		this.minY = minY;
+		this.maxX = maxX;
+		this.maxY = maxY;
+		
+		this.centerX = (minX + maxX)/2;// 元件中心點Ｘ
+		this.centerY = (minY + maxY)/2;// 元件中心點Ｙ
+		
+		
+	}
 	
 	// -- 以下是畫布設定，沒事不要亂動
     function init() {
@@ -60,6 +91,7 @@
         ctx.clearRect(0, 0, w, h);
 		pointscloud = [];
 		strokeID = 0;
+		units = [];
     }
 	// -- 以上是畫布部分，沒事不要動
 	
@@ -86,35 +118,40 @@
 		ctx.font = "30px Arial";
 		ctx.fillText("beautify",10,50);
 		
-		
 		//這行叫出放在ＧＩＴＨＵＢ裡的ＳＶＧ檔，（檔名，拉寬比，拉高比，中心點）
-		//Based on the recognized component
-		var result = _Recog.Recognize(pointscloud).Name;
-		//console.log(result)
-		switch(result)
-		{
-			case "switch":
-				justify('switch.svg', 10, 10, 50, 50);
-				break;
-			case "lamp":
-				justify('lamp.svg', 50, 50, 100, 100);
-				break;
-			case "capacitor":
-				justify('capacitor.svg', 10, 10, 50, 50);
-				break;
-			case "earthground":
-				justify('Earth_Ground.svg', 50, 50, 100, 100);
-				break;
-			case "resistor":
-				justify('Resistor.svg', 50, 50, 100, 100);
-				break;
-			case "inductor":
-				justify('Inductor.svg', 50, 50, 100, 100);
-				break;
-			case "AC":
-				justify('AC_voltage_source.svg', 50, 50, 100, 100);
-
+		//justify('switch.svg', 10, 10, 50, 50);
+		
+		for(var key in units){
+			var result = units[key].name;
+			var centerX = units[key].centerX;
+			var centerY = units[key].centerY;
+			var scaleH = 50;
+			var scaleW = 50;
+			switch(result)
+			{
+				case "switch":
+					justify('switch.svg', scaleW, scaleH, centerX, centerY);
+					break;
+				case "lamp":
+					justify('lamp.svg',scaleW, scaleH,centerX, centerY);
+					break;
+				case "capacitor":
+					justify('capacitor.svg', scaleW, scaleH,centerX, centerY);
+					break;
+				case "earthground":
+					justify('Earth_Ground.svg',scaleW, scaleH, centerX, centerY);
+					break;
+				case "resistor":
+					justify('Resistor.svg', scaleW, scaleH, centerX, centerY);
+					break;
+				case "inductor":
+					justify('Inductor.svg',scaleW, scaleH, centerX, centerY);
+					break;
+				case "AC":
+					justify('AC_voltage_source.svg',scaleW, scaleH, centerX, centerY);
+			}
 		}
+		
 		
 	}
 	
@@ -153,32 +190,33 @@
         if (res == 'down') {
             prevX = currX;
             prevY = currY;
-            currX = e.clientX - canvas.offsetLeft;
-            currY = e.clientY - canvas.offsetTop;
+            currX = e.clientX;
+            currY = e.clientY;
     		++strokeID;
             flag = true;
             dot_flag = true;
+			
             if (dot_flag) {
+				if(e.button == 2){
+					var result = _Recog.Recognize(pointscloud);
+					var unitattr = new unit_attribute(pointscloud, result.Name);
+					units.push(unitattr);
+					pointscloud = new Array();
+					strokeID = 0;
+					showResult(result.Name);
+					
+				}
+				else{
                 ctx.beginPath();
                 ctx.fillStyle = x;
                 ctx.fillRect(currX, currY, 2, 2);
                 ctx.closePath();
                 dot_flag = false;
+				}
             }
         }
         if (res == 'up' || res == "out") {
             flag = false;
-			var result = _Recog.Recognize(pointscloud);
-			var result2 = "clear!";
-			if (strokeID < 5){
-				showResult(result.Name);
-			}
-			else{
-				pointscloud = [];
-				strokeID = 0;
-				showResult(result2);
-			}
-
         }
         if (res == 'move') {
             if (flag) {
@@ -199,7 +237,7 @@
 	}
 // -- 以上畫布相關沒事不要動
     </script>
-			<body onload="init()">
+			<body onload="init()" oncontextmenu="return false;">
 			        <canvas id="myCanvas" width="1000" height="600" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
 			        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="float:left;">
 					<input type="button" value="colored" id="clo" size="23" onclick="colorized()" style="float:left;">
