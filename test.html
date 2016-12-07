@@ -72,6 +72,8 @@
         canvas.addEventListener("mouseout", function (e) {
             findxy('out', e)
         }, false);
+        
+
     }
     
     function draw() {
@@ -116,7 +118,7 @@
 	//美化，把線拉直和把ＳＶＧ依比例放在原草圖上
 	function beautify(){
 		ctx.font = "30px Arial";
-		ctx.fillText("beautify",10,50);
+		//ctx.fillText("beautify",10,50);
 		
 		//這行叫出放在ＧＩＴＨＵＢ裡的ＳＶＧ檔，（檔名，拉寬比，拉高比，中心點）
 		//justify('switch.svg', 10, 10, 50, 50);
@@ -133,7 +135,7 @@
 					justify('switch.svg', scaleW, scaleH, centerX, centerY);
 					break;
 				case "lamp":
-					justify('lamp.svg',scaleW, scaleH,centerX, centerY);
+					justify('lamp.svg', 100, 100, 0, 0);//scaleW, scaleH,centerX, centerY
 					break;
 				case "capacitor":
 					justify('capacitor.svg', scaleW, scaleH,centerX, centerY);
@@ -145,10 +147,10 @@
 					justify('Resistor.svg', scaleW, scaleH, centerX, centerY);
 					break;
 				case "inductor":
-					justify('Inductor.svg',scaleW, scaleH, centerX, centerY);
+					justify('Inductor.svg',100, 200, 0, 0);
 					break;
 				case "AC":
-					justify('AC_voltage_source.svg',scaleW, scaleH, centerX, centerY);
+					justify('AC_voltage_source.svg',10, 10, 100, 100);
 			}
 		}
 		
@@ -176,7 +178,9 @@
 						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/capacitor.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
 						break;
 				case 'lamp.svg':
-						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/lamp.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						canvg('myCanvas','svg/lamp.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
+						//'https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/lamp.svg'
+						//'svg/lamp1.svg'
 						break;
 				case 'switch.svg':
 						canvg('myCanvas','https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/switch.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
