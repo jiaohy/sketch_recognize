@@ -373,13 +373,17 @@
 		ctx.fillText(str, 1, 14);
 	}
 // -- 以上畫布相關沒事不要動
+//<input type="button" value="clear" id="clr" size="50" onclick="erase()" style="float:bottom;position:absolute;top:10%;left:90%;">
+//<input type="button" value="undo" id="und" size="23" onclick="undo()" style="float:bottom;position:absolute;top:13%;left:90%;">
+//<input type="button" value="redo" id="und" size="23" onclick="redo()" style="float:bottom;position:absolute;top:16%;left:90%;">
+
     </script>
 			<body onload="init()" oncontextmenu="return false;">
 			        <canvas id="myCanvas" width="1000" height="600" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
-			        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="float:left;">
-					<input type="button" value="undo" id="und" size="23" onclick="undo()" style="float:left;">
-					<input type="button" value="redo" id="und" size="23" onclick="redo()" style="float:left;">
-
+			        <button style="width:65;height:30;position:absolute;top:10%;left:90%;" value="clear" id="clr" onclick="erase()"><b>Clear</b></button>
+			         <button style="width:65;height:30;position:absolute;top:15%;left:90%;" value="undo" id="und" onclick="undo()"><b>Undo</b></button>
+			         <button style="width:65;height:30;position:absolute;top:20%;left:90%;" value="redo" id="und" onclick="redo()"><b>Redo</b></button>
+					
 					<div style="display:none;">
 						<img id="Line" src="svg/line.svg">
 						<img id="Resistor" src="svg/resistor.svg">
