@@ -296,37 +296,44 @@
 	
     function recognize(){
     	var result = _Recog.Recognize(pointscloud);
-		var comp = new Component(pointscloud, result.Name);
-		var distance = +Infinity;
-		var nearestX, nearestY, selfX, selfY;
-		for(var i = 0; i < units.length; i++){//find the nearest point
-			for(var j = 0; j < units[i].connectPointsX.length; j++){
-				for(var k = 0; k < comp.connectPointsX.length; k++){
-					var xdis = comp.connectPointsX[k]-units[i].connectPointsX[j];
-					var ydis = comp.connectPointsY[k]-units[i].connectPointsY[j];
-					var dis = Math.sqrt(xdis*xdis + ydis*ydis);
-					if(dis < distance){
-						distance = dis;
-						nearestX = units[i].connectPointsX[j];
-						nearestY = units[i].connectPointsY[j];
-						selfX = comp.connectPointsX[k];
-						selfY = comp.connectPointsY[k];
+    	var resultString = "";
+    	if(result.Score >= 0.2){
+    		var comp = new Component(pointscloud, result.Name);
+			var distance = +Infinity;
+			var nearestX, nearestY, selfX, selfY;
+			for(var i = 0; i < units.length; i++){//find the nearest point
+				for(var j = 0; j < units[i].connectPointsX.length; j++){
+					for(var k = 0; k < comp.connectPointsX.length; k++){
+						var xdis = comp.connectPointsX[k]-units[i].connectPointsX[j];
+						var ydis = comp.connectPointsY[k]-units[i].connectPointsY[j];
+						var dis = Math.sqrt(xdis*xdis + ydis*ydis);
+						if(dis < distance){
+							distance = dis;
+							nearestX = units[i].connectPointsX[j];
+							nearestY = units[i].connectPointsY[j];
+							selfX = comp.connectPointsX[k];
+							selfY = comp.connectPointsY[k];
+						}
 					}
+					
 				}
-				
 			}
-		}
 
-		if(distance < 50){//set the distance threshold to connect to 10
-			comp.move(nearestX - selfX, nearestY - selfY);
-		}
-		units.push(comp);
-		redraw();
+			if(distance < 50){//set the distance threshold to connect to 10
+				comp.move(nearestX - selfX, nearestY - selfY);
+			}
+			units.push(comp);
+			resultString = result.Name + " with confidence: " + result.Score.toFixed(2);
+    	}else{
+    		resultString = "Unable to recognize, please redraw.";
+    	}
 		
+		redraw();	
 
 		pointscloud = new Array();
 		strokeID = 0;
-		showResult(result.Name);
+
+		showResult(resultString);
     }
 //--以下也是畫布相關沒事不要動	
     function findxy(res, e) {
