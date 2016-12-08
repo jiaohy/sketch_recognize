@@ -1,22 +1,7 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100">
+<svg xmlns="http://www.w3.org/2000/svg" height="64" width="70">
 <circle cx="14" cy="50" r="10" stroke="black" stroke-width="4" fill="white"/>
   
   <line x1="19" y1="43" x2="70" y2="0" style="stroke:rgb(0,0,0);stroke-width:4" />
   Sorry, your browser does not support inline SVG.  
 </svg> 
-=======
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg">
-<defs>
-<marker id="DotS" orient="auto" refX="0" refY="0">
-<path d="m-2.5-1c0,2.76-2.24,5-5,5s-5-2.24-5-5 2.24-5 5-5 5,2.24 5,5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt" transform="matrix(.2,0,0,.2,1.48,.2)"/>
-</marker>
-</defs>
-<g transform="translate(-30.85714,-71.07647)">
-<path d="m32.85714,98.07647h58.57143l77.85714-25" fill="none" marker-mid="url(#DotS)" stroke="#000" stroke-width="4"/>
-<path d="m170.71429,98.79075h77.85713" fill="none" marker-start="url(#DotS)" stroke="#000" stroke-width="4"/>
-</g>
-</svg>
->>>>>>> 1c08f773ec7352da698e0206871e19f1fe97e3e1
