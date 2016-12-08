@@ -22,11 +22,17 @@
 	var pointscloud = [];// 點群
 	var newpoints;//點
 	var units = [];//ＵＮＩＴ群
+	var unitsDeleted = [];
+	var rCounter = 0;
+	var sCounter = 0;
+	var lCounter = 0;
+	var bCounter = 0;
 	
 	//一個UNIT元件的class
-	function unit_attribute(pointscloud, name){
-		this.pointscloud = pointscloud;
+	var Component = function(pointscloud, name){
 		this.name = name;
+		this.label = "";
+		this.isVertical = false;
 		var minX = +Infinity, maxX = -Infinity, minY = +Infinity, maxY = -Infinity;
 		for (var i = 0; i < pointscloud.length; i++) {
 			if(minX > pointscloud[i].X){
@@ -42,15 +48,136 @@
 				maxY = pointscloud[i].Y;
 			}
 		}	
-		this.minX = minX;
-		this.minY = minY;
-		this.maxX = maxX;
-		this.maxY = maxY;
+		this.offsetX = minX;
+		this.offsetY = minY;
+		this.width = maxX - minX;
+		this.height = maxY - minY;
+
+		this.connectPointsX = [];
+		this.connectPointsY = [];
+		this.image;
+		switch(name){
+			case 'line':				
+				this.height = 2;
+				this.image = document.getElementById("Line");
+				for (var i = minX; i < maxX; i += 50) {//every 50 pixels there exists a connecting point
+					this.connectPointsX.push(i);
+					this.connectPointsY.push(minY);
+				}
+				this.connectPointsX.push(maxX);
+				this.connectPointsY.push(minY);
+				break;
+
+			case 'line2':
+				this.width = 2;
+				this.image = document.getElementById("Line");
+				for (var j = minY; j < maxY; j += 50) {//every 50 pixels there exists a connecting point
+					this.connectPointsX.push(minX);
+					this.connectPointsY.push(j);
+				}
+				this.connectPointsX.push(minX);
+				this.connectPointsY.push(maxY);
+				break;
+
+			case 'resistor':
+				rCounter++;
+				this.label = "R" + rCounter;
+				this.image = document.getElementById("Resistor");
+				this.connectPointsX.push(minX);
+				this.connectPointsY.push((maxY+minY)/2);
+				this.connectPointsX.push(maxX);
+				this.connectPointsY.push((maxY+minY)/2);
+				break;
+
+			case 'resistor2':
+				rCounter++;
+				this.label = "R" + rCounter;
+				this.isVertical = true;
+				this.image = document.getElementById("Resistor2");
+				this.connectPointsX.push((maxX+minX)/2);
+				this.connectPointsY.push(minY);
+				this.connectPointsX.push((maxX+minX)/2);
+				this.connectPointsY.push(maxY);
+				break;
+
+			case 'battery':
+				bCounter++;
+				this.label = "B" + bCounter;
+				this.image = document.getElementById("Battery");
+				this.connectPointsX.push(minX);
+				this.connectPointsY.push((maxY+minY)/2);
+				this.connectPointsX.push(maxX);
+				this.connectPointsY.push((maxY+minY)/2);
+				break;
+
+			case 'battery2':
+				bCounter++;
+				this.label = "B" + bCounter;
+				this.isVertical = true;
+				this.image = document.getElementById("Battery2");
+				this.connectPointsX.push((maxX+minX)/2);
+				this.connectPointsY.push(minY);
+				this.connectPointsX.push((maxX+minX)/2);
+				this.connectPointsY.push(maxY);
+				break;
+
+			case 'switch':
+				sCounter++;
+				this.label = "S" + sCounter;
+				this.image = document.getElementById("Switch");
+				this.connectPointsX.push(minX);
+				this.connectPointsY.push(maxY-(maxY-minY)/5);
+				this.connectPointsX.push(maxX);
+				this.connectPointsY.push(maxY-(maxY-minY)/5);
+				break;
+
+			case 'switch2':
+				sCounter++;
+				this.label = "S" + sCounter;
+				this.isVertical = true;
+				this.image = document.getElementById("Switch2");
+				this.connectPointsX.push(maxX-(maxX-minX)/5);
+				this.connectPointsY.push(minY);
+				this.connectPointsX.push(maxX-(maxX-minX)/5);
+				this.connectPointsY.push(maxY);
+				break;
+
+			case 'lamp':
+				lCounter++;
+				this.label = "L" + lCounter;
+				this.image = document.getElementById("Lamp");
+				this.connectPointsX.push((maxX+minX)/2);
+				this.connectPointsY.push(minY);
+				this.connectPointsX.push(maxX);
+				this.connectPointsY.push((maxY+minY)/2);
+				this.connectPointsX.push((maxX+minX)/2);
+				this.connectPointsY.push(maxY);
+				this.connectPointsX.push(minX);
+				this.connectPointsY.push((maxY+minY)/2);
+				break;
+		}
 		
-		this.centerX = (minX + maxX)/2;// 元件中心點Ｘ
-		this.centerY = (minY + maxY)/2;// 元件中心點Ｙ
 		
 		
+		
+	}
+
+	Component.prototype.draw = function(){
+		ctx.drawImage(this.image, this.offsetX, this.offsetY, this.width, this.height);
+		if(this.isVertical){
+			ctx.fillText(this.label, this.offsetX - 20, this.offsetY + this.height/2);
+		}else{
+			ctx.fillText(this.label, this.offsetX + this.width/2, this.offsetY - 10);
+		}
+	}
+
+	Component.prototype.move = function(deltaX, deltaY){
+		this.offsetX += deltaX;
+		this.offsetY += deltaY;
+		for(var i = 0; i < this.connectPointsX.length; i++){
+			this.connectPointsX[i] += deltaX;
+			this.connectPointsY[i] += deltaY;
+		}
 	}
 	
 	// -- 以下是畫布設定，沒事不要亂動
@@ -89,22 +216,83 @@
 		
     }
     
+    function undo() {
+    	if(units.length > 0){
+    		var last = units.pop();
+    		unitsDeleted.push(last);
+    		switch(last.name){
+    			case 'resistor':
+    			case 'resistor2':
+    				rCounter--;
+    				break;
+
+    			case 'switch':
+    			case 'switch2':
+    				sCounter--;
+    				break;
+
+    			case 'battery':
+    			case 'battery2':
+    				bCounter--;
+    				break;
+
+    			case 'lamp':
+    				lCounter--;
+    				break;
+    		}
+    		redraw();
+    	}
+    	
+    }
+
+    function redo() {
+    	if(unitsDeleted.length > 0){
+    		var last = unitsDeleted.pop();
+    		units.push(last);
+    		switch(last.name){
+    			case 'resistor':
+    			case 'resistor2':
+    				rCounter++;
+    				break;
+
+    			case 'switch':
+    			case 'switch2':
+    				sCounter++;
+    				break;
+
+    			case 'battery':
+    			case 'battery2':
+    				bCounter++;
+    				break;
+
+    			case 'lamp':
+    				lCounter++;
+    				break;
+    		}
+    		redraw();
+    	}
+    	
+    }
+
+    function redraw(){
+    	ctx.clearRect(0, 0, w, h);
+		for(var i = 0; i < units.length; i++){
+			units[i].draw();
+		}
+    }
+
     function erase() {
         ctx.clearRect(0, 0, w, h);
 		pointscloud = [];
 		strokeID = 0;
 		units = [];
+		unitsDeleted = [];
+		rCounter = 0;
+		sCounter = 0;
+		lCounter = 0;
+		bCounter = 0;
     }
-	function erasestroke(unit){
-		ctx.clearRect(unit.minX-1, unit.minY-1, unit.maxX+1, unit.minY+1);
-	}
-	// -- 以上是畫布部分，沒事不要動
 	
-	// 上色，把各不同ＵＮＩＴ上色
-	function colorized(){
-		ctx.font = "30px Arial";
-		ctx.fillText("colored",10,50);
-	}
 	
 	// 編號，把個ＵＮＩＴ上編號
 	function number(){
@@ -119,11 +307,8 @@
 	
 	//美化，把線拉直和把ＳＶＧ依比例放在原草圖上
 	function beautify(){
-<<<<<<< HEAD
-		ctx.font = "30px Arial";
-=======
+
 		//ctx.font = "30px Arial";
->>>>>>> 1c08f773ec7352da698e0206871e19f1fe97e3e1
 		//ctx.fillText("beautify",10,50);
 		
 		//這行叫出放在ＧＩＴＨＵＢ裡的ＳＶＧ檔，（檔名，拉寬比，拉高比，中心點）
@@ -147,11 +332,8 @@
 					justify('switch.svg', minX, minY, maxX, maxY);
 					break;
 				case "lamp":
-<<<<<<< HEAD
-					justify('lamp.svg', 100, 100, 0, 0);//scaleW, scaleH,centerX, centerY
-=======
+
 					justify('lamp.svg',minX, minY, maxX, maxY);
->>>>>>> 1c08f773ec7352da698e0206871e19f1fe97e3e1
 					break;
 				case "capacitor":
 					justify('capacitor.svg', minX, minY, maxX, maxY);
@@ -163,17 +345,10 @@
 					justify('Resistor.svg', minX, minY, maxX, maxY);
 					break;
 				case "inductor":
-<<<<<<< HEAD
-					justify('Inductor.svg',100, 200, 0, 0);
-					break;
-				case "AC":
-					justify('AC_voltage_source.svg',10, 10, 100, 100);
-=======
 					justify('Inductor.svg',minX, minY, maxX, maxY);
 					break;
 				case "AC":
 					justify('AC_voltage_source.svg',minX, minY, maxX, maxY);
->>>>>>> 1c08f773ec7352da698e0206871e19f1fe97e3e1
 			}
 		}
 		
@@ -201,13 +376,7 @@
 					ctx.drawSvg('https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/capacitor.svg', minX, minY, maxX, maxY);
 						break;
 				case 'lamp.svg':
-<<<<<<< HEAD
-						canvg('myCanvas','svg/lamp.svg', {offsetX:centerX, offsetY:centerY, scaleWidth: scalewidth, scaleHeight:scaleheight, ignoreDimensions:true, useCORS:false, ignoreClear:true, ignoreMouse: true});
-						//'https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/lamp.svg'
-						//'svg/lamp1.svg'
-=======
 					ctx.drawSvg('https://raw.githubusercontent.com/jiaohy/sketch_recognize/166d1cd10c4b04993132eef2a1b17dcb25e62892/svg/lamp.svg', minX, minY, maxX, maxY);
->>>>>>> 1c08f773ec7352da698e0206871e19f1fe97e3e1
 						break;
 				case 'switch.svg':
 					ctx.drawSvg('https://raw.githubusercontent.com/jiaohy/sketch_recognize/cce3135d7497ac780a90600086df755d46562b4f/svg/SPST-Switch.svg', minX, minY, maxX, maxY);
@@ -229,8 +398,34 @@
             if (dot_flag) {
 				if(e.button == 2){
 					var result = _Recog.Recognize(pointscloud);
-					var unitattr = new unit_attribute(pointscloud, result.Name);
-					units.push(unitattr);
+					var comp = new Component(pointscloud, result.Name);
+					var distance = +Infinity;
+					var nearestX, nearestY, selfX, selfY;
+					for(var i = 0; i < units.length; i++){//find the nearest point
+						for(var j = 0; j < units[i].connectPointsX.length; j++){
+							for(var k = 0; k < comp.connectPointsX.length; k++){
+								var xdis = comp.connectPointsX[k]-units[i].connectPointsX[j];
+								var ydis = comp.connectPointsY[k]-units[i].connectPointsY[j];
+								var dis = Math.sqrt(xdis*xdis + ydis*ydis);
+								if(dis < distance){
+									distance = dis;
+									nearestX = units[i].connectPointsX[j];
+									nearestY = units[i].connectPointsY[j];
+									selfX = comp.connectPointsX[k];
+									selfY = comp.connectPointsY[k];
+								}
+							}
+							
+						}
+					}
+
+					if(distance < 50){//set the distance threshold to connect to 10
+						comp.move(nearestX - selfX, nearestY - selfY);
+					}
+					units.push(comp);
+					redraw();
+					
+
 					pointscloud = new Array();
 					strokeID = 0;
 					showResult(result.Name);
@@ -270,9 +465,19 @@
 			<body onload="init()" oncontextmenu="return false;">
 			        <canvas id="myCanvas" width="1000" height="600" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
 			        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="float:left;">
-					<input type="button" value="colored" id="clo" size="23" onclick="colorized()" style="float:left;">
-					<input type="button" value="numbered" id="num" size="23" onclick="number()" style="float:left;">
-					<input type="button" value="generate" id="gen" size="23" onclick="beautify()" style="float:left;">
+					<input type="button" value="undo" id="und" size="23" onclick="undo()" style="float:left;">
+					<input type="button" value="redo" id="und" size="23" onclick="redo()" style="float:left;">
+
+					<div style="display:none;">
+						<img id="Line" src="svg/line.svg">
+						<img id="Resistor" src="svg/resistor.svg">
+						<img id="Resistor2" src="svg/resistor2.svg">
+						<img id="Battery" src="svg/battery.svg">
+						<img id="Battery2" src="svg/battery2.svg">
+						<img id="Lamp" src="svg/lamp.svg">
+						<img id="Switch" src="svg/switch.svg">
+						<img id="Switch2" src="svg/switch2.svg">
+					</div>
 			    </body>
 			    </html>
 			

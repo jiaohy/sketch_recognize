@@ -87,7 +87,7 @@ function Result(name, score) // constructor
 //
 // PDollarRecognizer class constants
 //
-var NumPointClouds = 14;
+var NumPointClouds = 9;
 var NumPoints = 32;
 var Origin = new Point(0,0,0);
 //
@@ -100,35 +100,17 @@ function PDollarRecognizer() // constructor
 	//
 	this.PointClouds = new Array(NumPointClouds);
 	this.PointClouds[0] = new PointCloud("line", new Array(
-		new Point(294,235,1),new Point(294,308,1)
+		new Point(294,235,1),new Point(335,235,1)
 	));
-	this.PointClouds[1] = new PointCloud("capacitor", new Array(
-		new Point(281,235,1),new Point(281,308,1),
-		new Point(294,235,2),new Point(294,308,2)
-	));
-	this.PointClouds[2] = new PointCloud("earthground", new Array(
-		new Point(226,418,1),new Point(347,418,1),
-		new Point(248,438,2),new Point(326,438,2),
-		new Point(268,459,3),new Point(305,459,3)
-	));
-	this.PointClouds[3] = new PointCloud("resistor", new Array(
+	
+	this.PointClouds[1] = new PointCloud("resistor", new Array(
 		new Point(566,393,1),new Point(644,393,1),
 		new Point(566,393,2),new Point(566,423,2),
 		new Point(566,423,3),new Point(644,423,3),
 		new Point(644,393,4),new Point(644,423,4)
 	));
-	this.PointClouds[4] = new PointCloud("inductor", new Array(
-		new Point(284,403,1),new Point(286,386,1),new Point(290,375,1),new Point(298,362,1),new Point(304,355,1),new Point(311,350,1),
-		new Point(319,347,1),new Point(328,344,1),new Point(336,343,1),new Point(343,343,1),new Point(351,344,1),new Point(362,348,1),
-		new Point(370,352,1),new Point(379,361,1),new Point(386,371,1),new Point(391,380,1),new Point(394,395,1),new Point(394,403,1),
-		new Point(398,379,1),new Point(403,370,1),new Point(408,362,1),new Point(415,354,1),new Point(424,349,1),new Point(433,345,1),
-		new Point(442,343,1),new Point(448,343,1),new Point(465,345,1),new Point(476,349,1),new Point(495,367,1),new Point(500,377,1),
-		new Point(504,392,1),new Point(504,403,1),
-		new Point(507,383,1),new Point(514,369,1),new Point(521,360,1),new Point(533,350,1),new Point(545,344,1),new Point(556,342,1),
-		new Point(567,343,1),new Point(583,348,1),new Point(594,354,1),new Point(604,367,1),new Point(608,374,1),new Point(611,384,1),
-		new Point(615,393,1),new Point(616,400,1)
-	));
-	this.PointClouds[5] = new PointCloud("switch", new Array(
+	
+	this.PointClouds[2] = new PointCloud("switch", new Array(
 		new Point(356,469,1),new Point(358,449,1),new Point(361,434,1),new Point(368,413,1),new Point(377,400,1),new Point(389,385,1),
 		new Point(405,373,1),new Point(419,367,1),new Point(438,361,1),new Point(456,359,1),new Point(466,360,1),new Point(483,363,1),
 		new Point(496,367,1),new Point(512,375,1),new Point(527,387,1),new Point(537,400,1),new Point(547,416,1),new Point(554,434,1),
@@ -138,7 +120,13 @@ function PDollarRecognizer() // constructor
 		new Point(358,470,1),
 		new Point(528,388,2),new Point(1017,27,2)
 	));
-	this.PointClouds[6] = new PointCloud("lamp", new Array(
+	this.PointClouds[3] = new PointCloud("battery", new Array(
+		new Point(379,72,1),new Point(379,273,1),
+		new Point(419,135,2),new Point(419,212,2),
+		new Point(458,72,3),new Point(458,273,3),
+		new Point(496,135,4),new Point(496,212,4)
+	));
+	this.PointClouds[4] = new PointCloud("lamp", new Array(
 		new Point(356,469,1),new Point(358,449,1),new Point(361,434,1),new Point(368,413,1),new Point(377,400,1),new Point(389,385,1),
 		new Point(405,373,1),new Point(419,367,1),new Point(438,361,1),new Point(456,359,1),new Point(466,360,1),new Point(483,363,1),
 		new Point(496,367,1),new Point(512,375,1),new Point(527,387,1),new Point(537,400,1),new Point(547,416,1),new Point(554,434,1),
@@ -149,22 +137,10 @@ function PDollarRecognizer() // constructor
 		new Point(360,412,2),new Point(497,547,2),
 		new Point(360,490,3),new Point(497,360,3)
 	));
-	this.PointClouds[7] = new PointCloud("AC", new Array(
-		new Point(356,469,1),new Point(358,449,1),new Point(361,434,1),new Point(368,413,1),new Point(377,400,1),new Point(389,385,1),
-		new Point(405,373,1),new Point(419,367,1),new Point(438,361,1),new Point(456,359,1),new Point(466,360,1),new Point(483,363,1),
-		new Point(496,367,1),new Point(512,375,1),new Point(527,387,1),new Point(537,400,1),new Point(547,416,1),new Point(554,434,1),
-		new Point(556,452,1),new Point(556,473,1),new Point(550,494,1),new Point(543,509,1),new Point(531,525,1),new Point(518,538,1),
-		new Point(509,543,1),new Point(497,550,1),new Point(478,556,1),new Point(457,558,1),new Point(435,556,1),new Point(419,551,1),
-		new Point(403,542,1),new Point(392,534,1),new Point(382,524,1),new Point(372,510,1),new Point(363,495,1),new Point(359,479,1),
-		new Point(358,470,1),
-		new Point(372,459,2),new Point(379,475,2),new Point(387,488,2),new Point(396,494,2),new Point(406,500,2),new Point(416,501,2),
-		new Point(426,499,2),new Point(435,495,2),new Point(444,484,2),new Point(449,478,2),new Point(454,467,2),new Point(459,457,2),
-		new Point(464,443,2),new Point(470,434,2),new Point(475,427,2),new Point(482,422,2),new Point(490,417,2),new Point(501,416,2),
-		new Point(517,421,2),new Point(529,433,2),new Point(536,441,2),new Point(542,455,2)
-	));
 	
-	for (var i = 8; i < NumPointClouds; i++) {
-		tmpPoints = this.PointClouds[i - 8].Points;
+	
+	for (var i = 5; i < NumPointClouds; i++) {
+		tmpPoints = this.PointClouds[i - 5].Points;
 		var pointsArray = [];
 		for (var j = 0; j < tmpPoints.length; j++) {
 			var x = tmpPoints[j].Y;
@@ -172,7 +148,7 @@ function PDollarRecognizer() // constructor
 			var id = tmpPoints[j].ID;
 			pointsArray.splice(pointsArray.length, 0, new Point(x, y, id));
 		};
-		this.PointClouds[i] = new PointCloud(this.PointClouds[i - 8].Name, pointsArray);
+		this.PointClouds[i] = new PointCloud(this.PointClouds[i - 5].Name + "2", pointsArray);
 	}
 	// The $P Point-Cloud Recognizer API begins here -- 3 methods: Recognize(), AddGesture(), DeleteUserGestures()
 	//
