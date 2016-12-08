@@ -166,7 +166,7 @@
 	Component.prototype.draw = function(){
 		ctx.drawImage(this.image, this.offsetX, this.offsetY, this.width, this.height);
 		if(this.isVertical){
-			ctx.fillText(this.label, this.offsetX - 20, this.offsetY + this.height/2);
+			ctx.fillText(this.label, this.offsetX - 25, this.offsetY + this.height/2);
 		}else{
 			ctx.fillText(this.label, this.offsetX + this.width/2, this.offsetY - 10);
 		}
@@ -185,6 +185,7 @@
     function init() {
         canvas = document.getElementById('myCanvas');
         ctx = canvas.getContext("2d");
+        ctx.font = "20px Ariel";
         w = canvas.width;
         h = canvas.height;
     
@@ -297,7 +298,7 @@
     function recognize(){
     	var result = _Recog.Recognize(pointscloud);
     	var resultString = "";
-    	if(result.Score >= 0.2){
+    	if(result.Score >= 0.001){
     		var comp = new Component(pointscloud, result.Name);
 			var distance = +Infinity;
 			var nearestX, nearestY, selfX, selfY;
@@ -377,7 +378,8 @@
 		ctx.fillStyle = "rgb(255,255,136)";
 		ctx.fillRect(0, 0, w, 20);
 		ctx.fillStyle = "rgb(0,0,255)";
-		ctx.fillText(str, 1, 14);
+		
+		ctx.fillText(str, 1, 17);
 	}
 // -- 以上畫布相關沒事不要動
 //<input type="button" value="clear" id="clr" size="50" onclick="erase()" style="float:bottom;position:absolute;top:10%;left:90%;">
