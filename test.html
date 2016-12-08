@@ -17,6 +17,7 @@
         dot_flag = false,
 		strokeID = 0;
 		_Recog = new PDollarRecognizer();
+	var timerForRecognize;
     var x = "black",
         y = 2;
 	var pointscloud = [];// 點群
@@ -293,7 +294,40 @@
 		bCounter = 0;
     }
 	
-    
+    function recognize(){
+    	var result = _Recog.Recognize(pointscloud);
+		var comp = new Component(pointscloud, result.Name);
+		var distance = +Infinity;
+		var nearestX, nearestY, selfX, selfY;
+		for(var i = 0; i < units.length; i++){//find the nearest point
+			for(var j = 0; j < units[i].connectPointsX.length; j++){
+				for(var k = 0; k < comp.connectPointsX.length; k++){
+					var xdis = comp.connectPointsX[k]-units[i].connectPointsX[j];
+					var ydis = comp.connectPointsY[k]-units[i].connectPointsY[j];
+					var dis = Math.sqrt(xdis*xdis + ydis*ydis);
+					if(dis < distance){
+						distance = dis;
+						nearestX = units[i].connectPointsX[j];
+						nearestY = units[i].connectPointsY[j];
+						selfX = comp.connectPointsX[k];
+						selfY = comp.connectPointsY[k];
+					}
+				}
+				
+			}
+		}
+
+		if(distance < 50){//set the distance threshold to connect to 10
+			comp.move(nearestX - selfX, nearestY - selfY);
+		}
+		units.push(comp);
+		redraw();
+		
+
+		pointscloud = new Array();
+		strokeID = 0;
+		showResult(result.Name);
+    }
 //--以下也是畫布相關沒事不要動	
     function findxy(res, e) {
         if (res == 'down') {
@@ -303,55 +337,23 @@
             currY = e.clientY - canvas.offsetTop;
     		++strokeID;
             flag = true;
-            dot_flag = true;
+            
 			
-            if (dot_flag) {
-				if(e.button == 2){
-					var result = _Recog.Recognize(pointscloud);
-					var comp = new Component(pointscloud, result.Name);
-					var distance = +Infinity;
-					var nearestX, nearestY, selfX, selfY;
-					for(var i = 0; i < units.length; i++){//find the nearest point
-						for(var j = 0; j < units[i].connectPointsX.length; j++){
-							for(var k = 0; k < comp.connectPointsX.length; k++){
-								var xdis = comp.connectPointsX[k]-units[i].connectPointsX[j];
-								var ydis = comp.connectPointsY[k]-units[i].connectPointsY[j];
-								var dis = Math.sqrt(xdis*xdis + ydis*ydis);
-								if(dis < distance){
-									distance = dis;
-									nearestX = units[i].connectPointsX[j];
-									nearestY = units[i].connectPointsY[j];
-									selfX = comp.connectPointsX[k];
-									selfY = comp.connectPointsY[k];
-								}
-							}
-							
-						}
-					}
-
-					if(distance < 50){//set the distance threshold to connect to 10
-						comp.move(nearestX - selfX, nearestY - selfY);
-					}
-					units.push(comp);
-					redraw();
-					
-
-					pointscloud = new Array();
-					strokeID = 0;
-					showResult(result.Name);
-					
-				}
-				else{
+            
+			if(e.button <= 1){
+				
                 ctx.beginPath();
                 ctx.fillStyle = x;
                 ctx.fillRect(currX, currY, 2, 2);
                 ctx.closePath();
-                dot_flag = false;
-				}
-            }
+                
+
+			}
+			window.clearTimeout(timerForRecognize);
         }
         if (res == 'up' || res == "out") {
             flag = false;
+            timerForRecognize = window.setTimeout(recognize, 1000);// wait time to recognize
         }
         if (res == 'move') {
             if (flag) {
